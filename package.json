@@ -1,0 +1,24 @@
+{
+  "name": "code",
+  "version": "1.0.0",
+  "description": "uniapp开发基础工具添加",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jy-83/uniapp-base.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jy-83/uniapp-base/issues"
+  },
+  "homepage": "https://github.com/jy-83/uniapp-base#readme",
+  "dependencies": {
+    "dayjs": "^1.11.2",
+    "lodash": "^4.17.21"
+  }
+}
