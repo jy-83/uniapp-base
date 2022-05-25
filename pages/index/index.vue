@@ -1,24 +1,31 @@
 <template>
 	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
-		</view>
+		<button @click="get">点击</button>
+		<text>{{info.name}}</text>
 	</view>
 </template>
 
 <script>
+	import jyRequest from '@/service/index.js';
 	export default {
 		data() {
 			return {
-				title: 'Hello'
+				info:{}
 			}
 		},
 		onLoad() {
-
+			// this.get()
 		},
 		methods: {
-
+			 get() {
+				 jyRequest.get({
+					url: 'index/smapp/vip/get',
+				}).then(res=>{
+					console.log(res);
+					this.info=res;
+				})
+				
+			}
 		}
 	}
 </script>
