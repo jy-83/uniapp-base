@@ -1,10 +1,7 @@
 import axios from 'axios';
 import cache from '@/utils/cache.js';
-import jyRequest from '../index.js'
 
 const DEFAULT_LOADING = true;
-let queue = []; //缓存队列
-
 
 class Service {
 	constructor(config) {
@@ -58,12 +55,7 @@ class Service {
 			}
 			this.instance.request(config).then(res => {
 				this.showLoading = DEFAULT_LOADING;
-				if (res.data.error) {
-					codeFunction(res)
-					reject(res.data)
-				} else {
-					reslove(res.data.data)
-				}
+				reslove(res)
 			}).catch(error => {
 				this.showLoading = DEFAULT_LOADING;
 				reject(error)
@@ -86,43 +78,6 @@ class Service {
 
 export default Service
 
-function  codeFunction(res) {
-	let {
-		data: {
-			message
-		}
-	} = res;
-	if (message.indexOf('登录')) {
-		queue.push(() => {
-			jyRequest.request(res.config)
-		})
-		let pages = getCurrentPages();
-		let page = pages[pages.length - 1];
-		uni.login({
-			success: resCode => {
-				let {
-					code
-				} = resCode;
-				jyRequest.post({
-					url: `/index/smapp/base/login?code=${code}`
-				}).then(async response => {
-					if (response.newUser) {
-						this.queue = []
-					} else {
-						cache.setCache('sessionId', response.sessionId);
-						await queue.forEach(callback => {
-							  callback()
-						})
-						queue=[];
-						await page.onLoad(page.options);
-						await page.onShow();
-					}
-				})
-			}
-		})
-	}
-
-}
 /**
  * 
  * @param {number} status 

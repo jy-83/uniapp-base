@@ -1,29 +1,14 @@
 <template>
-	<view class="content">
-		<button @click="get">点击</button>
-		<text>{{info.name}}</text>
-	</view>
 </template>
 
 <script>
-	import jyRequest from '@/service/index.js'
 	export default {
 		data() {
-			return { info:{} }
+			return { }
 		},
 		onLoad() {
-			console.log('我是onload')
-			this.get()
 		},
-		methods: {
-			 get() {
-				 jyRequest.get({ url: 'index/smapp/vip/get', }).then(res=>{
-					console.log(res)
-					this.info=res
-				})
-				
-			}
-		}
+		methods: {}
 	}
 </script>
 
