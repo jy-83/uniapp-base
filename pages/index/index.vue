@@ -6,23 +6,20 @@
 </template>
 
 <script>
-	import jyRequest from '@/service/index.js';
+	import jyRequest from '@/service/index.js'
 	export default {
 		data() {
-			return {
-				info:{}
-			}
+			return { info:{} }
 		},
 		onLoad() {
-			// this.get()
+			console.log('我是onload')
+			this.get()
 		},
 		methods: {
 			 get() {
-				 jyRequest.get({
-					url: 'index/smapp/vip/get',
-				}).then(res=>{
-					console.log(res);
-					this.info=res;
+				 jyRequest.get({ url: 'index/smapp/vip/get', }).then(res=>{
+					console.log(res)
+					this.info=res
 				})
 				
 			}

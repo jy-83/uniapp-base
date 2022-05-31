@@ -3,7 +3,7 @@ import Service from "@/service/request/index.js";
  * 创建一个实例
  */
 const jyRequest=new Service({
-	baseURL:"http://192.168.0.109:8082/",
+	baseURL:"http://tg.51soft.vip/",
 	/*实例特有的请求和响应拦截*/
 	interceptors:{
 		/*请求成功拦截*/

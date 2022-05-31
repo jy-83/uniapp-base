@@ -3,38 +3,43 @@ import cache from '@/utils/cache.js';
 import jyRequest from '../index.js'
 
 const DEFAULT_LOADING = true;
-let queue=[];//缓存队列
+let queue = []; //缓存队列
 
 
 class Service {
 	constructor(config) {
 		this.instance = axios.create(config);
-		this.showLoading = config.showLoading??DEFAULT_LOADING;
+		this.showLoading = config.showLoading ?? DEFAULT_LOADING;
 		/*实例公共的请求拦截*/
-		this.instance.interceptors.request.use(config=>{
-			if(this.showLoading){
+		this.instance.interceptors.request.use(config => {
+			if (this.showLoading) {
 				uni.showLoading({
-					title:'加载中'
+					title: '加载中',
+					mask:true
 				})
 			}
 			/*请求头携带token*/
-			let sessionId=cache.getCache('sessionId');
-			if(sessionId){
-				config.headers.sessionId=sessionId;
+			let sessionId = cache.getCache('sessionId');
+			if (sessionId) {
+				config.headers.sessionId = sessionId;
 			}
 			return config;
 		})
 		/*实例公共的响应拦截*/
-		this.instance.interceptors.response.use(response=>{
+		this.instance.interceptors.response.use(response => {
 			uni.hideLoading();
 			return response;
-		},error=>{
-			let {response:{status}}=error;
+		}, error => {
+			let {
+				response: {
+					status
+				}
+			} = error;
 			uni.hideLoading();
 			errorFunction(status);
 			return error
 		})
-		
+
 		/*实例特有的请求拦截*/
 		this.instance.interceptors.request.use(
 			config.interceptors?.requestInterceptor,
@@ -48,57 +53,69 @@ class Service {
 	}
 	request(config) {
 		return new Promise((reslove, reject) => {
-			if(config.showLoading===false){
-				this.showLoading=false;
+			if (config.showLoading === false) {
+				this.showLoading = false;
 			}
 			this.instance.request(config).then(res => {
-				this.showLoading=DEFAULT_LOADING;
-				if(res.data.error){
+				this.showLoading = DEFAULT_LOADING;
+				if (res.data.error) {
 					codeFunction(res)
-					// reject(res.data)
-				}else{
+					reject(res.data)
+				} else {
 					reslove(res.data.data)
 				}
 			}).catch(error => {
-				this.showLoading=DEFAULT_LOADING;
+				this.showLoading = DEFAULT_LOADING;
 				reject(error)
 			})
 		})
 	}
-	get(config){
-		return this.request({...config,method:'get'})
+	get(config) {
+		return this.request({
+			...config,
+			method: 'get'
+		})
 	}
-	post(config){
-		return this.request({...config,method:'post'})
+	post(config) {
+		return this.request({
+			...config,
+			method: 'post'
+		})
 	}
 }
 
 export default Service
 
-function codeFunction(res){
-	let {data:{message}}=res;
-	if(message.indexOf('登录')){
-		// return
-		queue.push(()=>{
+function  codeFunction(res) {
+	let {
+		data: {
+			message
+		}
+	} = res;
+	if (message.indexOf('登录')) {
+		queue.push(() => {
 			jyRequest.request(res.config)
 		})
-		 let pages = getCurrentPages();
-		   let page = pages[pages.length - 1];
+		let pages = getCurrentPages();
+		let page = pages[pages.length - 1];
 		uni.login({
-			success:resCode=>{
-				let {code}=resCode;
+			success: resCode => {
+				let {
+					code
+				} = resCode;
 				jyRequest.post({
-					url:`/index/smapp/base/login?code=${code}`
-				}).then(response=>{
-					
-					if(response.newUser){
-						this.queue=[]
-					}else{
-						cache.setCache('sessionId',response.sessionId)
-						page.onLoad(page.options);
-						queue.forEach(callback=>{
-							callback()
+					url: `/index/smapp/base/login?code=${code}`
+				}).then(async response => {
+					if (response.newUser) {
+						this.queue = []
+					} else {
+						cache.setCache('sessionId', response.sessionId);
+						await queue.forEach(callback => {
+							  callback()
 						})
+						queue=[];
+						await page.onLoad(page.options);
+						await page.onShow();
 					}
 				})
 			}
@@ -110,18 +127,18 @@ function codeFunction(res){
  * 
  * @param {number} status 
  */
-function errorFunction(status){
-	switch (status){
+function errorFunction(status) {
+	switch (status) {
 		case 404:
 			uni.showToast({
-				title:'接口不存在',
-				icon:'none'
+				title: '接口不存在',
+				icon: 'none'
 			})
 			break;
 		case 500:
 			uni.showToast({
-				title:'服务器错误',
-				icon:'none'
+				title: '服务器错误',
+				icon: 'none'
 			})
 			break;
 		default:
@@ -160,5 +177,3 @@ axios.defaults.adapter = function(config) {
 		})
 	})
 }
-
-
