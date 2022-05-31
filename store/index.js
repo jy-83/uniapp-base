@@ -1,7 +1,9 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import path from "path";
-
+/**
+ * 只需要在modules创建不需要单独引入
+ */
 Vue.use(Vuex);
 const files=require.context("./modules",false,/\.js/);
 const modules={};
