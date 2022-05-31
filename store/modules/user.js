@@ -1,4 +1,2 @@
-const user={
-	namespaced:true,
-};
+const user={ namespaced:true };
 export default user;
