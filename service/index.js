@@ -48,7 +48,7 @@ function codeFunction(res) {
 				let { code } = resCode;
 				jyRequest.post({ url: `/index/smapp/base/login?code=${code}` }).then(async response => {
 					if (response.newUser) {
-						this.queue = [];
+						queue = [];
 					} else {
 						cache.setCache("sessionId", response.sessionId);
 						await queue.forEach(callback => {

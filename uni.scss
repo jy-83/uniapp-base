@@ -1,0 +1,30 @@
+//颜色相关
+$color-title: #333; //标题
+$color-content: #666; //正文
+$color-tip: #999; //注释
+$color: #2e82ff; //主题色
+$color-border: #eee; //边框颜色
+$background: #f8f8f8; //背景色
+$color-white: #fff;
+
+// 边距相关
+$distance: 30rpx;
+$distance-medium: 20rpx;
+$distance-sm: 10rpx;
+
+// 字体大小
+$font-sm: 20rpx;
+$font-base: 24rpx;
+$font-medium: 28rpx;
+$font-lg: 32rpx;
+//圆角
+$radius: 30rpx;
+$radius-medium: 20rpx;
+$radius-sm: 10rpx;
+// 文本溢出隐藏
+@mixin line($i) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $i;
+}
